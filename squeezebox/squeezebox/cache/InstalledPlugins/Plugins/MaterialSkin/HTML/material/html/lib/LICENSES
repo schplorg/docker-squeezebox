@@ -1,0 +1,69 @@
+axios
+    Version: 0.19.0
+    URL: https://github.com/axios/axios
+    License: MIT
+
+cometd
+    Version: 4.0.3 (modfified)
+    URL: https://github.com/cometd/cometd-javascript
+    License: Apache License Version 2.0
+    Notes: Renamed to libcometd.js. Changess made to work with LMS. Original is
+           libcometd.orig.js
+
+idb-keyval:
+    Version: 3.1.0 with pull req 50
+    URL: https://github.com/jakearchibald/idb-keyval
+    License: Apache License Version 2.0
+
+intersection-observer
+    Version: 0.5.0
+    URL: https://github.com/w3c/IntersectionObserver
+    License: W3C Software and Document License.
+
+moustrap:
+    Version: a4098
+    URL: https://craig.is/killing/mice
+    License: Apache License, Version 2.0
+
+PhotoSwipe:
+    Version: 4.1.2
+    URL: https://github.com/dimsemenov/PhotoSwipe
+    License: MIT
+
+vue
+    Version: 2.6.10
+    URL: https://github.com/vuejs/vue
+    License: MIT
+
+vue-lazyload
+    Version: 1.2.6
+    URL: https://github.com/hilongjw/vue-lazyload
+    License: MIT
+
+vue-touch-events:
+    Version: 2.0.0
+    URL: https://github.com/jerrybendy/vue-touch-events
+    License: MIT
+
+vue-virtual-scroller:
+    Version: 1.0.0-rc2
+    URL: https://github.com/Akryum/vue-virtual-scroller
+    License: MIT
+
+vuetify-confirm:
+    Version: pre 0.2.0
+    URL: https://github.com/yariksav/vuetify-confirm
+    License: MIT
+    Notes: Swapped location of True/False buttons, remove default setting of
+           button colours, and made dialogs persistent.
+
+vuetify
+    Version: 1.5.16
+    URL: https://github.com/vuetifyjs/vuetify
+    License: MIT
+
+vuex    
+    Version: 3.1.1
+    URL: https://github.com/vuejs/vuex
+    License: MIT
+

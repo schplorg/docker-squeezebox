@@ -1,0 +1,120 @@
+[% PROCESS settings/header.html %]
+	[% title = "PLUGIN_SPOTTY" %]
+	[% IF helperMissing; WRAPPER setting title="PLUGIN_SPOTTY" desc="" %]
+		<div style="color: red">[% helperMissing %]</div>
+		[% title = "" %]
+	[% END; END %]
+
+	[% IF isLowCaloriesPi; WRAPPER setting title="PLUGIN_SPOTTY" desc="" %]
+		<div style="color: red">[% 'PLUGIN_SPOTTY_LO_POWER_PI' | string %]</div>
+		[% title = "" %]
+	[% END; END %]
+
+	[% IF error429; WRAPPER setting title="" desc="" %]
+		<div style="color: red">[% error429 %]</div>
+	[% END; END %]
+
+	[% IF credentials; WRAPPER setting desc="" %]
+		<table>
+		[% FOREACH creds = credentials %]
+			<tr>
+				<td style="vertical-align: middle; padding-right: 10px">[% creds.keys.0 %]</td>
+				<td>
+					<input name="delete_[% creds.values.0 %]" type="submit" value="[% "DELETE" | string %]" class="stdclick" />
+				</td>
+			</tr>
+		[% END %]
+		</table>
+	[% END; END %]
+
+	[% WRAPPER setting title="" desc="" %]
+		<input name="addAccount" type=submit value="[% "PLUGIN_SPOTTY_ADD_ACCOUNT" | string %]" class="stdclick" />
+	[% END %]
+
+	[% IF credentials && credentials.size > 1 %]
+		[% WRAPPER setting title="PLUGIN_SPOTTY_SELECT_ACCOUNT" desc="" %]
+			<input type="radio" name="pref_accountSwitcherMenu" id="pref_accountSwitcherMenu1" value="1" [% IF prefs.pref_accountSwitcherMenu %]checked="checked"[% END %] />
+			<label for="pref_accountSwitcherMenu1" class="stdlabel">[% 'PLUGIN_SPOTTY_SIMPLIFIED_ACCOUNT_SWITCHING_OFF' | getstring %]</label><br/>
+			<input type="radio" name="pref_accountSwitcherMenu" id="pref_accountSwitcherMenu0" value="0" [% IF NOT prefs.pref_accountSwitcherMenu %]checked="checked"[% END %] />
+			<label for="pref_accountSwitcherMenu0" class="stdlabel">[% 'PLUGIN_SPOTTY_SIMPLIFIED_ACCOUNT_SWITCHING_ON' | getstring %]</label><br/>
+		[% END %]
+	[% END %]
+
+	[% WRAPPER setting title="" desc="" %]
+		<input name="pref_myAlbumsOnly" id="pref_myAlbumsOnly" type="checkbox" [% IF prefs.pref_myAlbumsOnly %] checked [% END %]>
+		<label for="pref_myAlbumsOnly">[% "PLUGIN_SPOTTY_SHOW_MY_ALBUMS_ONLY_DESC" | string %]</label>
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_SPOTTY_AUDIO_SETTINGS" desc="" %]
+		<select class="stdedit" name="pref_bitrate" id="pref_bitrate">
+
+		[% FOREACH option = {
+			'PLUGIN_SPOTTY_AUDIO_SETTINGS_096' => 96,
+			'PLUGIN_SPOTTY_AUDIO_SETTINGS_160' => 160,
+			'PLUGIN_SPOTTY_AUDIO_SETTINGS_320' => 320
+		} %]
+			<option [% IF prefs.pref_bitrate == option.value %]selected [% END %]value="[% option.value %]">[% option.key | string %]</option>
+		[%- END -%]
+
+		</select>
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_SPOTTY_PLAYLIST_FOLDERS" desc="" %]
+		<input name="clearPlaylistFolderCache" id="clearPlaylistFolderCache" type="checkbox">
+		<label for="clearPlaylistFolderCache">[% "PLUGIN_SPOTTY_CLEAR_PLAYLIST_FOLDERS_CACHE" | string %]</label>
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_SPOTTY_SEARCH_HISTORY" desc="" %]
+		<input name="clearSearchHistory" id="clearSearchHistory" type="checkbox">
+		<label for="clearSearchHistory">[% "PLUGIN_SPOTTY_CLEAR_SEARCH_HISTORY" | string %]</label>
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_SPOTTY_SPOTIFY_CONNECT" desc="PLUGIN_SPOTTY_SPOTIFY_CONNECT_DESC_LONG" %]
+		[% IF !canConnect %]
+			[% "PLUGIN_SPOTTY_NEED_HELPER_UPDATE" | string %]
+		[% ELSE %]
+			[% IF players.size == 0 %]
+				[% "NO_PLAYER_FOUND" | string %]
+			[% END %]
+			<table style="border-spacing:0">
+			[% FOREACH player IN players %]
+				[% maxCols = 5 %]
+				[% IF loop.index() % maxCols == 0 %]<tr>[% END %]
+				<td style="padding: 0 10px 2px 0">
+					<input type="checkbox" name="connect_[% player.id %]" id="connect_[% player.id %]" [% IF player.enabled %] checked [% END %] value="1" />
+					<label for="connect_[% player.id %]">[% player.name %]</label>
+				</td>
+				[% IF (loop.index + 1) % maxCols == 0 %]</tr>[% END %]
+			[% END %]
+			</table>
+		[% END %]
+	[% END %]
+
+	[% PROCESS "plugins/Spotty/settings/helpers.html" %]
+
+	[% WRAPPER setting title="PLUGIN_SPOTTY_ADVANCED_SETTING" desc="" %]
+		[% "PLUGIN_SPOTTY_ADVANCED_SETTING_DESC" | string %]
+	[% END %]
+
+	[% IF canConnect; WRAPPER setting title="" desc="" %]
+		<input name="pref_optimizePreBuffer" id="pref_optimizePreBuffer" type="checkbox" [% IF prefs.pref_optimizePreBuffer %] checked [% END %]>
+		<label for="pref_optimizePreBuffer">[% "PLUGIN_SPOTTY_OPTIMIZE_PRE_BUFFERING" | string %]</label>
+	[% END; ELSE %]
+		<input name="pref_optimizePreBuffer" id="pref_optimizePreBuffer" type="hidden" value="[% prefs.pref_optimizePreBuffer %]">
+	[% END %]
+
+	[% IF canConnect && canDiscovery; WRAPPER setting title="" desc="" %]
+		<input name="pref_disableDiscovery" id="pref_disableDiscovery" type="checkbox" [% IF prefs.pref_disableDiscovery %] checked [% END %]>
+		<label for="pref_disableDiscovery">[% "PLUGIN_SPOTTY_DISABLE_DISCOVERY_DESC" | string %]</label>
+	[% END; END %]
+
+	[% IF canConnect && canDiscovery; WRAPPER setting title="" desc="" %]
+		<input name="pref_checkDaemonConnected" id="pref_checkDaemonConnected" type="checkbox" [% IF prefs.pref_checkDaemonConnected %] checked [% END %]>
+		<label for="pref_checkDaemonConnected">[% "PLUGIN_SPOTTY_CHECK_DAEMON_IS_CONNECTED" | string %]</label>
+	[% END; END %]
+
+	[% WRAPPER setting title="PLUGIN_SPOTTY_CLIENT_ID" desc="PLUGIN_SPOTTY_CLIENT_ID_DESC" %]
+		<input name="pref_iconCode" id="pref_iconCode" type="text" value="[% IF !hasDefaultIcon; prefs.pref_iconCode; END %]" class="stdedit" size="40">
+	[% END %]
+
+[% PROCESS settings/footer.html %]

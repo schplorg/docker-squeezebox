@@ -1,0 +1,146 @@
+<!--
+ * LMS-Material
+ *
+ * Copyright (c) 2018-2019 Craig Drummond <craig.p.drummond@gmail.com>
+ * MIT license.
+-->
+ 
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <title>Logitech Media Server</title>
+  <link href="html/css/dark.min.css?r=[% material_revision %]" rel="stylesheet"> <!-- **must** be first -->
+  <link href="html/font/font.css?r=48" rel="stylesheet">
+  <link href="html/lib/vuetify.min.css?r=1.5.16" rel="stylesheet">
+  <link href="html/lib/vue-virtual-scroller.css?r=1.0.0-rc2" rel="stylesheet">
+  <link href="html/lib/photoswipe/photoswipe.css?r=4.1.2" rel="stylesheet">
+  <link href="html/lib/photoswipe/default-skin/default-skin.css?r=4.1.2" rel="stylesheet">
+  <link href="html/css/style.min.css?r=[% material_revision %]" rel="stylesheet">
+  <link href="html/css/mobile.min.css?r=[% material_revision %]" rel="stylesheet">
+  <link rel="manifest" href="html/manifest.json?r=[% material_revision %]">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="application-name" content="Logitech Media Server">
+  <link href="html/images/icon.png?r=[% material_revision %]" rel="icon shortcut" sizes="128x128">
+  <link href="html/images/icon-ios.png?r=[% material_revision %]" rel="apple-touch-icon" sizes="128x128">
+ </head>
+ <body>
+  <div id="app" v-cloak>
+   <v-app class="lms-app" :dark="darkUi" v-touch:swipe.left="swipeLeft" v-touch:swipe.right="swipeRight">
+    <lms-toolbar></lms-toolbar>
+    <lms-currentcover></lms-currentcover>
+    <lms-server></lms-server>
+    <lms-browse v-show="page=='browse'"></lms-browse>
+    <lms-now-playing v-show="page=='now-playing'"></lms-now-playing>
+    <lms-queue v-show="page=='queue'"></lms-queue>
+    <lms-bottomnav></lms-bottomnav>
+    <lms-ui-settings v-if="dialogs.uisettings"></lms-ui-settings>
+    <lms-player-settings v-if="dialogs.playersettings"></lms-player-settings>
+    <lms-information-dialog v-if="dialogs.info"></lms-information-dialog>
+    <lms-sync-dialog v-if="dialogs.sync"></lms-sync-dialog>
+    <lms-groupplayers-dialog v-if="dialogs.group"></lms-groupplayers-dialog>
+    <lms-volume v-if="dialogs.volume"></lms-volume>
+    <lms-manage-players v-if="dialogs.manage"></lms-manage-players>
+    <lms-randommix v-if="dialogs.rndmix"></lms-randommix>
+    <lms-favorite v-if="dialogs.favorite"></lms-favorite>
+    <lms-rating-dialog v-if="dialogs.rating"></lms-rating-dialog>
+    <lms-sleep-dialog v-if="dialogs.sleep"></lms-sleep-dialog>
+    <lms-search-dialog v-if="dialogs.search"></lms-search-dialog>
+    <lms-movequeue-dialog v-if="dialogs.movequeue"></lms-movequeue-dialog>
+    <lms-podcast-add-dialog v-if="dialogs.podcastadd"></lms-podcast-add-dialog>
+    <lms-podcast-search-dialog v-if="dialogs.podcastsearch"></lms-podcast-search-dialog>
+    <lms-info-dialog v-if="dialogs.iteminfo"></lms-info-dialog>
+    <lms-iframe-dialog v-if="dialogs.iframe"></lms-iframe-dialog>
+    <lms-dstm-dialog v-if="dialogs.dstm"></lms-dstm-dialog>
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+     <div class="pswp__bg"></div>
+     <div class="pswp__scroll-wrap">
+      <div class="pswp__container">
+       <div class="pswp__item"></div>
+       <div class="pswp__item"></div>
+       <div class="pswp__item"></div>
+      </div>
+      <div class="pswp__ui pswp__ui--hidden">
+       <div class="pswp__top-bar">
+        <div class="pswp__counter"></div>
+        <button class="pswp__button pswp__button--close"></button>
+        <button class="pswp__button pswp__button--fs"></button>
+        <button class="pswp__button pswp__button--zoom"></button>
+        <div class="pswp__preloader">
+         <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+           <div class="pswp__preloader__donut"></div>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip"></div>
+       </div>
+       <button class="pswp__button pswp__button--arrow--left"></button>
+       <button class="pswp__button pswp__button--arrow--right"></button>
+       <div class="pswp__caption">
+        <div class="pswp__caption__center"></div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </v-app>
+  </div>
+  <script>const LMS_MATERIAL_REVISION="[% material_revision %]";</script>
+  <script src="html/lib/axios.min.js?r=0.19.0"></script>
+  <script src="html/lib/libcometd.min.js?r=4.0.3mod"></script>
+  <script src="html/lib/idb-keyval-iife.min.js?r=3.1.0p50"></script>
+  <script src="html/lib/vue.min.js?r=2.6.10"></script>
+  <script src="html/lib/vuetify.min.js?r=1.5.16"></script>
+  <script src="html/lib/vuex.min.js?r=3.1.1"></script>
+  <script src="html/lib/vue-lazyload.js?r=1.2.6"></script>
+  <script src="html/lib/vuetify-confirm.min.js?r=[% material_revision %]"></script>
+  <script src="html/lib/longpress.min.js?r=[% material_revision %]"></script>
+  <script src="html/lib/intersection-observer.min.js?r=0.5.0"></script>
+  <script src="html/lib/vue-virtual-scroller.min.js?r=1.0.0-rc2"></script>
+  <script src="html/lib/photoswipe/photoswipe.min.js?r=4.1.2"></script>
+  <script src="html/lib/photoswipe/photoswipe-ui-default.min.js?r=4.1.2"></script>
+  <script src="html/lib/vue-touch-events.min.js?r=2.0.0"></script>
+  <script src="html/lib/mousetrap.min.js?r=a4098"></script>
+  <script src="html/js/actions.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/constants.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/currentcover.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/utils.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/toolbar.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/bottomnav.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/icon-mapping.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/browse-resp.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/browse-page.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/nowplaying-page.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/queue-page.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/sync-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/groupplayers-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/server.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/ui-settings.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/player-settings.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/volume.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/information.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/randommix-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/rating-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/manage-players.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/favorite-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/sleep-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/search-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/movequeue-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/podcast-add-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/podcast-search-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/info-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/iframe-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/dstm-dialog.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/i18n.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/store.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/init.min.js?r=[% material_revision %]"></script>
+  <script src="html/js/main.min.js?r=[% material_revision %]"></script>
+ </body>
+</html>
+

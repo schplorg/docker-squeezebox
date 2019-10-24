@@ -1,0 +1,17 @@
+{
+  "name": "LMS Mobile UI",
+  "short_name": "LMS",
+  "theme_color": "#424242",
+  "background_color": "#424242",
+  "display": "fullscreen",
+  "scope": "/material",
+  "start_url": "/material",
+  "icons": [
+    {
+      "src": "images/icon.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ],
+  "splash_pages": null
+}

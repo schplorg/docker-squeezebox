@@ -1,0 +1,36 @@
+---
+_ts_additionalMenuItems: 1571959091
+_ts_enableLosslessPreferred: 1571959091
+_version: 0
+additionalMenuItems:
+- enabled: 1
+  feed: artists
+  id: myMusicArtistsComposers
+  name: Composers
+  params:
+    role_id: COMPOSER
+  weight: 12
+- enabled: 0
+  feed: artists
+  id: myMusicArtistsConductors
+  name: Classical Music by Conductor
+  params:
+    genre_id: Classical
+    role_id: CONDUCTOR
+  weight: 13
+- enabled: 0
+  feed: artists
+  id: myMusicArtistsJazzComposers
+  name: Jazz Composers
+  params:
+    genre_id: Jazz
+    role_id: COMPOSER
+  weight: 13
+- enabled: 0
+  feed: albums
+  id: myMusicAlbumsAudiobooks
+  name: Audiobooks
+  params:
+    genre_id: Audiobooks, Spoken, Speech
+  weight: 14
+enableLosslessPreferred: 0

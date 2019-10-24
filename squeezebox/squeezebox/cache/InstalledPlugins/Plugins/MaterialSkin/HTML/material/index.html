@@ -1,0 +1,36 @@
+<!--
+ * LMS-Material
+ *
+ * Copyright (c) 2018-2019 Craig Drummond <craig.p.drummond@gmail.com>
+ * MIT license.
+-->
+ 
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <title>Logitech Media Server</title>
+  <link rel="manifest" href="html/manifest.json?r=[% material_revision %]">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="application-name" content="Logitech Media Server">
+  <link href="html/images/icon.png?r=[% material_revision %]" rel="icon shortcut" sizes="128x128">
+  <link href="html/images/icon-ios.png?r=[% material_revision %]" rel="apple-touch-icon" sizes="128x128">
+ </head>
+ <body>
+  <script src="html/lib/vue.min.js?r=2.5.17"></script>
+  <script src="html/js/utils.min.js?r=[% material_revision %]"></script>
+  <script>
+   var layout = getLocalStorageVal("layout", "auto");
+   if (layout != "desktop" && layout != "mobile") {
+     layout = isMobile() ? "mobile" : "desktop";
+   }
+   var query = window.location.href.indexOf('?');
+   var queryString = query > 0 ? window.location.href.substring(window.location.href.indexOf('?')) : "";
+   window.location.href = "/material/" + layout + queryString;
+  </script>
+ </body>
+</html>
+
